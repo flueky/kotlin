@@ -2,9 +2,9 @@ Kotlin入门
 
 [TOC]
 
-#入门
-##基本句法
-###定义包名
+# 入门
+## 基本句法
+### 定义包名
 在源文件的顶部定义包名
 
 ```java
@@ -15,7 +15,7 @@ import java.util.*
 
 Kotlin不要求匹配目录和包名：源文件可以放在文件系统任意的位置。
 
-###定义函数
+### 定义函数
 下述函数定义了两个Int参数和一个Int的返回类型：
 
 ```java
@@ -46,7 +46,7 @@ fun printSum(a: Int, b: Int) {
 }
 ```
 
-###定义本地变量
+### 定义本地变量
 一次赋值（只读）本地变量：
 
 ```java
@@ -63,7 +63,7 @@ var x = 5
 x += 1
 ```
 
-###注释
+### 注释
 
 同Java和JavaScript一样，Kotlin支持行注释和块注释。
 
@@ -75,7 +75,7 @@ x += 1
 
 和Java不一样的地方在于，Kotlin中的块注释可以嵌套。
 
-###使用字符串模板
+### 使用字符串模板
 
 ```java
 var a = 1 
@@ -89,7 +89,7 @@ a = 2
 val s2 = "${s1.replace("is", "was")}, but now is $a"
 ```
 
-###使用条件表达式
+### 使用条件表达式
 
 ```java
 fun maxOf(a: Int, b: Int): Int {
@@ -107,7 +107,7 @@ fun maxOf(a: Int, b: Int): Int {
 fun maxOf(a: Int, b: Int) = if (a > b) a else b
 ```
 
-###使用nullable和校验null
+### 使用nullable和校验null
 当一个引用可能是null值时，必须明确标记nullable
 
 下述函数，当str没有保存一个整数时将返回null
@@ -136,7 +136,7 @@ fun printProduct(arg1: String, arg2: String) {
 }
 ```
 
-###使用类型检查和类型自动转化
+### 使用类型检查和类型自动转化
 操作符 is 校验表达式是否是某个类型的实例，如果本地常量或属性经过明确的类型校验，他将没必要做明确的类型转换。
 
 ```java
@@ -175,7 +175,7 @@ fun getStringLength(obj: Any): Int? {
 }
 ```
 
-###使用for循环
+### 使用for循环
 
 ```java
 val items = listOf<String>("apple","orange","kiwi")
@@ -187,7 +187,7 @@ for(index in items.indices)
     println("item at $index is ${items[index]}")
 ```
 
-###使用while循环
+### 使用while循环
 
 ```java
 val items = listOf<String>("apple","orange","kiwi")
@@ -199,7 +199,7 @@ while(index<items.size){
 }
 ```
 
-###使用when表达式
+### 使用when表达式
 
 ```java
 fun describe(obj: Any): String =
@@ -212,7 +212,7 @@ fun describe(obj: Any): String =
     }
 ```
 
-###使用序列
+### 使用序列
 用in操作符检查数字是否在序列中
 
 ```java
@@ -250,7 +250,7 @@ for(index in 0..10 step 2)
 for(index in 9 downTo 1 step 3)
     println("index = $index")
 ```
-###使用集合
+### 使用集合
 
 迭代集合
 
@@ -282,8 +282,8 @@ items
     .forEach { println(it) }
 ```
 
-##风格
-###创建DTOs（POJOs/POCOs）
+## 风格
+### 创建DTOs（POJOs/POCOs）
 
 ```java
 data class Customer(val name: String, val email: String)
@@ -299,13 +299,13 @@ data class Customer(val name: String, val email: String)
 
 
 
-###函数参数默认值
+### 函数参数默认值
 
 ```java
 fun foo(a: Int = 0, b: String = "") { ... }
 ```
 
-###筛选list
+### 筛选list
 
 ```java
 val list = 1..5
@@ -317,13 +317,13 @@ val position = list.filter { x->x>3 }//position = [4,5]
 val position = list.filter { x>3 }//position = [4,5]
 ```
 
-###插入字符串
+### 插入字符串
 
 ```java
 println("Name $name")
 ```
 
-###检查实例
+### 检查实例
 
 ```java
 when (x) { 
@@ -333,7 +333,7 @@ when (x) {
 }
 ```
 
-###遍历map/list
+### 遍历map/list
 
 ```java
 for ((k, v) in map) { 
@@ -343,7 +343,7 @@ for ((k, v) in map) {
 
 >k、v可以是任意类型
 
-###使用序列
+### 使用序列
 
 ```java
 for (i in 1..100) { ... } // 封闭式，包含100
@@ -353,26 +353,26 @@ for (x in 10 downTo 1) { ... }
 if (x in 1..10) { ... }
 ```
 
-###只读list
+### 只读list
 
 ```java
 val list = listOf("a", "b", "c")
 ```
 
-###只读map
+### 只读map
 
 ```java
 val map = mapOf("a" to 1, "b" to 2, "c" to 3)
 ```
 
-###访问map
+### 访问map
 
 ```java
 println(map["key"]) 
 map["key"] = value //需要实现set方法
 ```
 
-###懒属性(lazy property)
+### 懒属性(lazy property)
 
 ```java
 val p: String by lazy { 
@@ -380,7 +380,7 @@ val p: String by lazy {
 }
 ```
 
-###函数表达式
+### 函数表达式
 
 ```java
 fun String.spaceToCamelCase() { ... }
@@ -388,7 +388,7 @@ fun String.spaceToCamelCase() { ... }
 "Convert this to camelcase".spaceToCamelCase()
 ```
 
-###创建单例
+### 创建单例
 
 ```java
 object Resource { 
@@ -396,35 +396,35 @@ object Resource {
 }
 ```
 
-###if not null 简单表达
+### if not null 简单表达
 
 ```java
 val files = File("Test").listFiles()
 
 println(files?.size)
 ```
-###if not null and else 简单表达
+### if not null and else 简单表达
 
 ```java
 val files = File("Test").listFiles()
 
 println(files?.size ?: "empty")
 ```
-###如果空，执行声明
+### 如果空，执行声明
 
 ```java
 val data = ...
 
 val email = data["email"] ?: throw IllegalStateException("Email is missing!")
 ```
-###如果非空执行
+### 如果非空执行
 ```java
 val data = ...
 
 data?.let { ... // execute this block if not null 
 }
 ```
-###返回when声明
+### 返回when声明
 ```java
 fun transform(color: String): Int {
     return when (color) { 
@@ -436,7 +436,7 @@ fun transform(color: String): Int {
 }
 ```
 
-###try/catch 表达式
+### try/catch 表达式
 ```java
 fun test() {
 
@@ -450,7 +450,7 @@ fun test() {
 }
 ```
 
-### if 表达式
+###  if 表达式
 
 ```java
 fun foo(param: Int) {
@@ -463,14 +463,14 @@ fun foo(param: Int) {
     }
 }
 ```
-###对返回Unit方法使用构建风格
+### 对返回Unit方法使用构建风格
 
 ```java
 fun arrayOfMinusOnes(size: Int): IntArray {
     return IntArray(size).apply { fill(-1) }
 }
 ```
-###单表达式函数
+### 单表达式函数
 
 ```java
 fun theAnswer() = 42
@@ -495,7 +495,7 @@ fun transform(color: String): Int = when (color) {
 }
 ```
 
-###使用with，执行对象实例的多个方法
+### 使用with，执行对象实例的多个方法
 
 ```java
 class Turtle {
@@ -517,7 +517,7 @@ with (myTurtle) {
 }
 ```
 
-###使用java7 try 读取资源
+### 使用java7 try 读取资源
 
 ```java
 val stream = Files.newInputStream(Paths.get("/some/file.txt"))
@@ -526,7 +526,7 @@ stream.buffered().reader().use { reader ->
 }
 ```
 
-### 要求泛型参数的泛型函数的简单格式
+###  要求泛型参数的泛型函数的简单格式
 
 ```java
 //  public final class Gson {
@@ -537,7 +537,7 @@ stream.buffered().reader().use { reader ->
 inline fun <reified T : Any> Gson.fromJson(json): T = this.fromJson(json, T::class.java)
 ```
 
-###使用可能为空的Boolean
+### 使用可能为空的Boolean
 ```java
 val b: Boolean? = ... 
 if (b == true) {
@@ -547,10 +547,10 @@ if (b == true) {
 }
 ```
 
-##编码规范
+## 编码规范
 **这页包含了Kotlin语言当前的编码风格**
 
-###命名风格
+### 命名风格
 
 如果存疑虑，默认使用java的编码规范，如下：
 
@@ -560,7 +560,7 @@ if (b == true) {
 * 四个空格缩进
 * 公共方法需要有注释记录，这样就会出现在Kotlin文档中
 
-###冒号
+### 冒号
 当用冒号分割类型和父类型时，冒号前后都需要空格；当用冒号分割实体和类型时，冒号后需要空格。
 
 ```java
@@ -569,7 +569,7 @@ interface Foo<out T : Any> : Bar {
 }
 ```
 
-###Lambda
+### Lambda
 在Lambda表达式中，空格用在花括号前后，也用在分割函数体中参数的箭头前后。任何时候，若有可能，lambda表达式都在圆括号的外面。
 
 ```java
@@ -578,7 +578,7 @@ list.filter { it > 10 }.map { element -> element * 2 }
 
 lambda应当简短避免嵌套，推荐使用`it`方便的替代明确声明的参数。在嵌套的lambda中使用参数时，参数应当明确申明。
 
-###类开头格式
+### 类开头格式
 只有少数几个参数的类，可以写在一行：
 
 ```java
@@ -613,7 +613,7 @@ class Person(
 >构造函数参数可以使用单次或多次缩进
 
 
-###Unit
+### Unit
 
 如果函数返回Unit，返回类型可以省略。
 
@@ -623,7 +623,7 @@ fun foo() {
 }
 ```
 
-###函数和属性
+### 函数和属性
 
 在某些场景，使用无参函数和只读属性可交换。尽管在语义上相似，但在文法约定上却有一些偏好。
 
@@ -634,13 +634,13 @@ fun foo() {
 * 每次返回相同值
 
 
-#基础
+# 基础
 
-##基本类型
+## 基本类型
 
 Kotlin中，任何感官上的事务都是对象，我们可以调用任何变量的成员函数和成员属性。某些类型在实现时经过优化，它们在构建时生成，但是对程序员而言，就像使用普通类一样。在这一节将描述这些类型：Numbers、Characters、Booleans和Arrays。
 
-###Numbers
+### Numbers
 
 Kotlin处理数字的方式同Java很接近，但不雷同。举个例子：Kotlin不存在数字内在变宽转换（java中，int可以转成long），而且某些场景中存在字面上的差别。
 
@@ -657,7 +657,7 @@ Kotlin提供如下內建类型表示数字（这同Java相似）
 
 **注：Kotlin中，字符不是数字**
 
-####数字常量
+#### 数字常量
 
 有如下类型的整数常量：
 
@@ -673,7 +673,7 @@ Kotlin提供如下內建类型表示数字（这同Java相似）
 * 默认双精度型：123.5，123.5e10
 * 单精度型用F(f)标记：123.5f
 
-####下划线分割的数字（1.1开始）
+#### 下划线分割的数字（1.1开始）
 可以使用下划线使数字更易读
 
 ```java
@@ -683,7 +683,7 @@ val socialSecurityNumber = 999_99_9999L
 val hexBytes = 0xFF_EC_DE_5E
 val bytes = 0b11010010_01101001_10010100_10010010
 ```
-####存储表示
+#### 存储表示
 在Java平台，数字当做原始类型保存在物理存储空间，除非我们需要一个可以为空的引用（如：Int？）或者涉及泛型。后者情况下，数字是封装的。
 
 **注：封装的数字没必要保持它的特征**
@@ -706,7 +706,7 @@ val anotherBoxedA: Int? = a
 print(boxedA == anotherBoxedA) // !!!输出'true'!!!
 ```
 
-####显示转换
+#### 显示转换
 由于不同的存储表示，小的类型并不是大些类型的子类型。如果是这样，我们将会遇到下述麻烦。
 
 ```java
@@ -746,7 +746,7 @@ val i: Int = b.toInt() // 可以，显示变宽（位宽）
 ```java
 val l = 1L + 3 // Long + Int => Long
 ```
-####运算
+#### 运算
 Kotlin支持数字的标准算术运算，当做合适类的成员声明（但是，编译器会在调用相应的指令进行优化）。
 
 作为位运算，没有为他们定义特殊的字符，只有叫做修整形式命名的函数。如：
@@ -765,7 +765,7 @@ val x = (1 shl 2) and 0x000FF000
 * xor(bits) ——位运算异或
 * inv() ——位运算取反
 
-###Characters
+### Characters
 Character通常用Char表示，不能直接当做数字对待
 
 ```java
@@ -789,7 +789,7 @@ fun decimalDigitValue(c: Char): Int {
 
 同数字一样，当字符需要一个可空的引用时，会被封装起来，字符的特征就不会被保持。
 
-###Booleans
+### Booleans
 Boolean用类型`Boolean`表示，通常有两个值：**true**和**false**。
 
 如果可以为空引用是必须的，Boolean 也会封装起来。
@@ -799,7 +799,7 @@ Boolean类型的內建操作符包括：
 * && —— 与
 * ！——非
 
-###Arrays
+### Arrays
 Kotlin中，Array类表示数组，有`get`和`set`两个函数(通过运算符重载用`[]`表示)和size属性，和一些其他的有用的成员函数。
 
 ```java
@@ -834,7 +834,7 @@ Kotlin有一些专门的类来表示没有封装的原始类型数组。`ByteArr
 val x: IntArray = intArrayOf(1, 2, 3) 
 x[0] = x[1] + x[2]
 ```
-###Strings
+### Strings
 使用`String`表示字符串，String是不可变的，字符串的每个字符元素可以使用索引运算符`[]`访问。可以用for循环迭代访问一个字符串的元素。
 
 ```java
@@ -843,7 +843,7 @@ for (c in str) {
 }
 ```
 
-####字符串表示
+#### 字符串表示
 Kotlin有两种字符串表示形式。转义字符串可能包含转义字符以及由换行和任意文本组成的字符串。转义字符串和Java中的字符串很相似。
 
 ```java
@@ -874,7 +874,7 @@ val text = """
 
 `|`默认用来做空白前缀，你也可以选择其他字符作为参数传递，如`trimMargin(">")`
 
-####字符串模板
+#### 字符串模板
 
 字符串可以包含模板表达式，即将一段代码推算出来并将结果拼接在字符串中，一个模板表达式由一个dollar符开始($)和一些简单的名称组成。
 
@@ -899,7 +899,7 @@ val price = """
 ```
 
 
-##包
+## 包
 源文件可能开始于包的声明
 
 ```kotlin
@@ -913,7 +913,7 @@ class Goo {}
 
 >如果包没有具体说明，那么该文件中所有内容都属于没有名称的默认包。
 
-###默认导入
+### 默认导入
 每个Kotlin源文件都会默认导入数个包：
 
 * kotlin.* 
@@ -933,7 +933,7 @@ class Goo {}
 * JS:
     * kotlin.js.*
 
-###自定义导入
+### 自定义导入
 除了默认导入的包，每个文件可能包含他自己输入的指令。
 我们既可以导入单个名称
 
@@ -961,11 +961,11 @@ import bar.Bar as bBar // bBar 表示'bar.Bar'
 
 >不同于Java,Kotlin不支持单独`import static`句法，所有的这些声明都是用常用的import关键字。
 
-###顶层声明的权限
+### 顶层声明的权限
 如果顶层声明的被标记成`private`，那么它只属于文件内部私有。
 
-##控制流
-###if表达式
+## 控制流
+### if表达式
 在Kotlin中，if是一个表达式，即，if有返回值。因此没有三元运算符（条件?yes:no）,因为if已经很好的扮演了这个角色。
 
 ```java
@@ -999,7 +999,7 @@ val max = if (a > b) {
 
 如果使用if作为表达式而不是语句（如：返回它的值或者赋值给一个变量），那么表达式就需要else分支。
 
-###when表达式
+### when表达式
 
 `when`替换C类编程语言的`switch`操作，它具有简单的格式，如下：
 
@@ -1064,7 +1064,7 @@ when {
 }
 ```
 
-###for循环
+### for循环
 for循环可以迭代任何提供了迭代器的对象。句法如下：
 
 ```java
@@ -1103,7 +1103,7 @@ for ((index, value) in array.withIndex()) {
 }
 ```
 
-###while循环
+### while循环
 `while`和`do...while`循环的工作原理同平常一样。
 
 ```java
@@ -1115,10 +1115,10 @@ do {
     val y = retrieveData() 
 } while (y != null)
 ```
-###循环内的break和continue
+### 循环内的break和continue
 在循环内部，kotlin支持传统的`break`和`continue`操作。
 
-##返回和跳转
+## 返回和跳转
 kotlin有三种跳转结构表达式：
 
 * return 默认情况下，从最近的封闭函数（或匿名函数）返回
@@ -1131,7 +1131,7 @@ kotlin有三种跳转结构表达式：
 val s = x.name ?: return //name==null时，执行return
 ```
 
-###break和continue标签
+### break和continue标签
 Kotlin中任何表达式都可以标记为标签。标签通常有可识别的格式用后缀@标记。如：abc@，fooBar@都是合法的标签。给表达式贴上标签只需在其前面添加一个标签即可。
 
 ```java
@@ -1152,7 +1152,7 @@ loop@ for (i in 1..100) {
 
 一个有资格使用标签的break跳转到被标签标记的循环右面的地方开始执行。continue处理循环的下一次迭代。
 
-###return到标签
+### return到标签
 Kotlin中与函数式、本地函数和对象表达式对比，函数可以嵌套。有资格`return`的地方允许我们返回到外层函数。最重要的使用案例是从lambda表达式中返回。当我们这样写时会调用。
 
 ```java
@@ -1205,9 +1205,9 @@ return@a 1
 
 表示给标签@a返回1，而不是返回一个标签表达式`@a 1`
 
-#类和对象
-##类和继承
-###类
+# 类和对象
+## 类和继承
+### 类
 Kotlin中使用关键词`class`声明类。
 
 ```java
@@ -1220,7 +1220,7 @@ class Invoice{
 ```java
 class Empty
 ```
-####构造器
+#### 构造器
 每个类，有一个主构造函数和一个或多个次构造函数。主构造函数是类头的一部分，它在类名称（如果有类型参数）的后面。
 
 ```java
@@ -1301,7 +1301,7 @@ class DontCreateMe private constructor () { //主构造函数不可见
 ```java 
 class Customer(val customerName: String = "")
 ```
-####创建类的实例
+#### 创建类的实例
 
 像使用普通函数一样，调用构造函数创建实例。
 
@@ -1313,7 +1313,7 @@ val customer = Customer("Joe Smith")
 
 **注：Kotlin中没有关键词`new`。**
 
-####类成员
+#### 类成员
 
 类包含：
 
@@ -1323,7 +1323,7 @@ val customer = Customer("Joe Smith")
 * 嵌套和内部类
 * 对象声明
 
-###继承
+### 继承
 Kotlin中所有的类都有一个公共父类`Any`，这是没有声明父类的类的默认父类。
 
 ```java
@@ -1354,7 +1354,7 @@ class MyView : View {
 
 `open`注解的作用和Java中的`final`相反：它允许其他类继承这个类，Kotlin中所有类默认是final。
 
-####重写方法
+#### 重写方法
 
 正如我们前面提到的，在kotlin中坚持做明确的事情。不同于Java，Kotlin要求显示注解可重写成员（我们称之为`open`）然后在重写它。
 
@@ -1379,7 +1379,7 @@ open class AnotherDerived() : Base() {
 }
 ```
 
-####重写属性
+#### 重写属性
 属性重写的工作原理同方法重写的工作原理一致；在父类型中声明的属性在派生类型中声明时需要在其前面添加`override`，而且他们必须有一致的类型。每个声明的属性都可以被有初始值的属性或有getter方法赋值的属性重写。
 
 ```java
@@ -1407,7 +1407,7 @@ class Bar2 : Foo {
 ```
 
 
-####重写规则
+#### 重写规则
 
 Kotlin中，实现继承，需要遵循如下规则：如果一个类继承超类相同成员的很多实现，必须重写改成员并提供自己的实现（也许使用继承的某一个）。为了表示使用继承实现中的哪个父类型，使用`super`限定尖括号中的父类型名称。即：`super<Base>`：
 
@@ -1435,7 +1435,7 @@ class C() : A(), B { // 编译器要求f()被重写:
 
 >这样继承`A`和`B`时候没问题的。由于`C`只继承了每个函数的一个实现，所以我们使用`a()`和`b()`是没有问题的。但对`f()`我们有`C`继承的两个实现，因此我们不得不在`C`中重写`f()`和提供自己的实现，消除歧义。
 
-###抽象类
+### 抽象类
 
 一个类或它的某些成员可以被声明成`abstract`。一个抽象成员在他的类中不能有具体的实现。
 >我们没必要给抽象类使用`open`注解——不言而喻。
@@ -1452,7 +1452,7 @@ abstract class Derived : Base() {
 }
 ```
 
-###伴生对象
+### 伴生对象
 
 Kotlin中，不同于Java或C#，类没有静态方法。在更多场合，要求使用包层级的函数取代。
 
@@ -1461,8 +1461,8 @@ Kotlin中，不同于Java或C#，类没有静态方法。在更多场合，要�
 更具体地说，如果你在你的类中声明一个伴生对象，你可以只使用类名作为修饰语调用它的成员，与Java或C#调用静态方法具有相同的语法。
 
 
-##属性和字段
-###声明属性
+## 属性和字段
+###  声明属性
 Kotlin中的类可以有属性，它们可以被声明成可变的`var`可以被声明成只读`val`的。
 
 ```java
@@ -1487,7 +1487,7 @@ fun copyAddress(address: Address): Address {
 }
 ```
 
-###getter和setter
+### getter和setter
 
 声明一个属性，完整的句法是这样的：
 
@@ -1546,24 +1546,48 @@ var setterWithAnnotation: Any? = null
     @Inject set // setter添加Inject注解
 ```
 
-####隐藏字段
-Kotlin的类中不能有字段。
-####隐藏属性
-###编译时常量
-###重写属性
-###代理属性
-##接口
+#### 幕后字段
 
-###实现接口
-###接口中的属性
-###解决重写冲突
+Kotlin的类中不能有字段。然而当使用自定义访问器时，有时候拥有个幕后字段是很有必要的。
+为此，Kotlin提供一个自动幕后字段，它可以通过标示符`field`访问。
+
+```java
+var counter = 0 // 初始值直接写给幕后字段
+    set(value) {
+        if (value >= 0) field = value
+    }
+```
+> 标识符`field`只能用在属性的访问器中。
+
+如果一个属性至少有一个默认实现的访问器或者使用标识符`field`自定义访问器时，才会生成一个幕后字段。
+
+举个例子，像下述情况就没有幕后字段。
+
+```java
+// 只有一个访问器且没有在自定义访问器中使用field。
+val isEmpty: Boolean
+    get() = this.size == 0
+```
+
+> 译者注：好多人分不清属性和字段的区别。在Java和其他大多数面向对象编程语言中，字段指类中申明的变量，属性指类中对变量的读写行为（setter和getter）。而Kotlin中已经将两者合成在一起，因此若单独定义字段，将会发生冲突。
+
+
+#### 隐藏属性
+### 编译时常量
+### 重写属性
+### 代理属性
+## 接口
+
+### 实现接口
+### 接口中的属性
+### 解决重写冲突
 
 ```
-##访问修饰符
-###包
-###类和接口
-###模块
-##表达式
+## 访问修饰符
+### 包
+### 类和接口
+### 模块
+## 表达式
 
 ##数据类
 ##密封类
