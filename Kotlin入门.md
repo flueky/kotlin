@@ -1571,9 +1571,28 @@ val isEmpty: Boolean
 
 > 译者注：好多人分不清属性和字段的区别。在Java和其他大多数面向对象编程语言中，字段指类中申明的变量，属性指类中对变量的读写行为（setter和getter）。而Kotlin中已经将两者合成在一起，因此若单独定义字段，将会发生冲突。
 
-
 #### 隐藏属性
+
+如果你想做的事情不符合这个“隐式的幕后字段”设计，你总可以后退一步使用幕后属性。
+
+```java
+private var _table: Map<String, Int>? = null
+public val table: Map<String, Int>
+    get() {
+        if (_table == null) {
+            _table = HashMap() // Type parameters are inferred
+        }
+        return _table ?: throw AssertionError("Set to null by another thread")
+    }
+```
+
+在各方面，这恰好和Java一样，由于访问私有属性的默认setter和getter被优化过，所以没有引入函数调用开销。
+
 ### 编译时常量
+
+这些属性需要满足以下要求：
+
+### 延迟初始化属性
 ### 重写属性
 ### 代理属性
 ## 接口
