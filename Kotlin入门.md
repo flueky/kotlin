@@ -1638,13 +1638,87 @@ public class MyTest {
 
 ## 接口
 
+Kotlin的接口和Java 8的接口很相似。它们可以包含抽象方法也可以包含方法的实现。与抽象类不同的地方在于，接口不可以存储状态。它们可以拥有属性，但是必须是抽象的或者提供访问器的实现。
+
+使用关键词`interface`定义接口：
+
+```java
+interface MyInterface {
+    fun bar()
+    fun foo() {
+        // 可选的方法体
+    }
+}
+```
+
 ### 实现接口
+
+一个类或对象，可以实现一个或多个接口
+
+```java
+class Child : MyInterface {
+    override fun bar() {
+        // body
+    }
+}
+```
+
 ### 接口中的属性
+
+你可以在接口中声明属性，接口中声明的属性可以使抽象的也可以提供访问器的实现。但是声明在接口中的属性，不可以有幕后字段，因此定义在接口中的访问器不能引用它们。
+
+```java
+interface MyInterface {
+    val prop: Int // 抽象属性
+    val propertyWithImplementation: String
+        get() = "foo"
+    fun foo() {
+        print(prop)
+    }
+} 
+class Child : MyInterface {
+    verride val prop: Int = 29
+}
+```
+
 ### 解决重写冲突
 
+当我们在超级类型列表中声明多个类型时，会发现我们继承了不止一个相同方法的实现。如：
+
+```java
+interface A {
+    fun foo() { print("A") }
+    fun bar()
+} 
+interface B {
+    fun foo() { print("B") }
+    fun bar() { print("bar") }
+}
+class C : A {
+    override fun bar() { print("bar") }
+} 
+class D : A, B {
+    override fun foo() {
+        super<A>.foo()
+        super<B>.foo()
+    } 
+    override fun bar() {
+        super<B>.bar()
+    }
+}
 ```
+
+接口A和接口B都申明了函数foo()和bar()。它们都实现了foo(),只有B实现了bar(),（A中的bar()没有用abstract标记，因为在接口中，如果函数没有函数体，那么该函数默认是抽象函数）。现在，如果我们从A类生成一个具体的C类，我们显然需要重写bar()和提供一个实现。
+
+然而，如果我们从A和B类生成一个具体的D类，我们需要实现从多个接口中继承过来的所有方法，而且详细说明D需要怎样完全的实现它们。这个规则用于我们继承的单个实现(bar())和多个实现(foo())方法。
+
 ## 访问修饰符
+
+类、对象、接口、构造函数、函数、属性和它的setter可以有访问修饰符（getter通常和属性有相同的访问属性）。Kotlin中有4个访问修饰符：private、protected、internal和public。如果没有使用显示的修饰符，将会使用默认的访问属性public。
+
 ### 包
+
+```
 ### 类和接口
 ### 模块
 ## 表达式
