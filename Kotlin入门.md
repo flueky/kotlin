@@ -1809,13 +1809,105 @@ class C private constructor(a: Int) { ... }
 
 ## 扩展
 
-Kotlin, similar to C# and Gosu, provides the ability to extend a class with new functionality without having to inherit from the class or use any type of design pattern such as Decorator. This is done via special declarations called extensions . Kotlin supports extension functions and extension properties .
-
 与C#和Gosu类似，Kotlin提供既不使用继承也不使用任何类型的设计模式（如装饰者模式）扩展新功能类的能力。这种通过特殊声明的操作叫做扩展。Kotlin支持函数扩展和属性扩展。
 
 ### 函数扩展
+
+To declare an extension function, we need to prefix its name with a receiver type, i.e. the type being extended. The following
+adds a swap function to MutableList<Int> :
+
+为声明一个函数扩展，我们需要给函数的名称添加一个接收者类型做为前缀，即，被扩展的类型。下面给` MutableList<Int>`添加`swap`函数：
+
+```java
+fun MutableList<Int>.swap(index1: Int, index2: Int) {
+    val tmp = this[index1] // 'this'对应到list
+    this[index1] = this[index2]
+    this[index2] = tmp
+}
+```
+
+The this keyword inside an extension function corresponds to the receiver object (the one that is passed before the dot). Now,
+we can call such a function on any MutableList<Int> :
+
+扩展函数中的关键词`this`对应着接收对象（在点经过前的那个），现在我们可以在任意 `MutableList<Int>`对象上使用这个函数。
+
+```java
+val l = mutableListOf(1, 2, 3)
+l.swap(0, 2) // swap 中的 this 将持有l的值
+```
+
+当然，这个函数对任意的`MutableList<T>`都适用，所以我们可以将它变得更加通用：
+
+```java
+fun <T> MutableList<T>.swap(index1: Int, index2: Int) {
+    val tmp = this[index1] // 'this' corresponds to the list
+    this[index1] = this[index2]
+    this[index2] = tmp
+}
+```
+
+我们在函数名称前声明的通用类型参数，使其适用于接收类型表达式。见泛型函数。
+
 ### 静态解析扩展
+
+扩展并没有真正的修改它们所扩展的类。你不可以通过扩展插入一个新的成员给一个类，仅仅可以使用点符号给变量的类型定义一个可调用的新函数。
+
+我们需要强调的是，扩展函数是静态处理的，即，它们不是接受类型虚有的。这表示调用的扩展函数取决于被调用函数的表达式类型，不是运行时评估出表达式结果类型。
+
+```java
+open class C
+class D: C()
+fun C.foo() = "c"
+fun D.foo() = "d"
+fun printFoo(c: C) {
+    println(c.foo())
+}
+printFoo(D())
+```
+
+这个例子会输出"c"，因为被调用的扩展函数由参数c的类型C 
+类决定。
+
+If a class has a member function, and an extension function is defined which has the same receiver type, the same name and is
+applicable to given arguments, the member always wins. For example:
+
+如果类有成员函数，而且定义了一个具有相同接收类型、相同名称并且适用于给定参数的扩展函数，那么成员函数总是被调用。例如：
+
+```java
+class C {
+    fun foo() { println("member") }
+} 
+fun C.foo() { println("extension") }
+```
+
+If we call c.foo() of any c of type C , it will print "member", not "extension".
+
+如果我们调用C类型的任一实例c的函数`foo()`，将会输出"member"，而不是"extension"。
+
+然而，扩展函数使用相同名称，不同签名的方式重载成员函数是完全可以的：
+
+```java
+class C {
+    fun foo() { println("member") }
+} 
+fun C.foo(i: Int) { println("extension") }
+```
+
+调用`C().foo(1)`会输出"extension"。
+
 ### 可空的接收者
+
+注意的是，扩展可以基于可能为空的接收类型定义。这样的扩展可以通过对象变量调用，即使它的值是空的，也可以在扩展体内部校验 `this == null`。这就是为什么Kotlin中允许你调用`toString()`却不需要校验null：因为校验已经在扩展函数内部发生了。
+
+```java
+fun Any?.toString(): String {
+    if (this == null) return "null"
+   // null检查之后，this会自动转化成非空类型，所以toString()会被解析到Any类下的成员函数
+    return toString()
+}
+```
+
+
 ### 属性扩展
 ### 伴随对象扩展
 ### 扩展域
