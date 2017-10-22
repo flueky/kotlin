@@ -1718,10 +1718,112 @@ class D : A, B {
 
 ### 包
 
+函数、属性和类、对象和接口都可以定义在顶层(top-level)，即，直接在包内：
+
+```java
+// 文件名: example.kt 
+package foo
+
+fun baz() {} //顶层的函数
+class Bar {} //顶层的类
 ```
+
+- 如果你没有具体说明任何修饰符，就默认使用public，这样你声明的包，就可以在任何地方被访问。
+- 如果你声明为private，那就只能在包含声明的文件内部可以访问。
+- 如果你声明为internal，它就可以在同一个模块的任何地方可以访问。
+- protected在顶层声明中不可以使用。
+
+如：
+
+```java
+// 文件名: example.kt 
+package foo
+
+private fun foo() {} // foo只在example.kt内可以访问
+public var bar: Int = 5 // bar可以在任何地方范文。
+    private set // setter 只在 example.kt内可以访问
+
+internal val baz = 6// 在相同的模块中可以访问。
+```
+
 ### 类和接口
+
+当在类中声明成员时：
+
+- private 只能在类内部可以访问（包括它所有的成员）。
+- protected 不仅可以在类内部访问，还可以在子类中访问。
+- internal 在本模块中可以访问到声明类的终端就可以访问到声明的internal成员。
+- public 所有可以访问到声明类的终端就可以访问到声明的public成员。
+
+例子：
+
+```java
+open class Outer {
+    private val a = 1 
+    protected open val b = 2 
+    internal val c = 3 
+    val d = 4 // 默认是public
+
+    protected class Nested {
+        public val e: Int = 5 
+    }
+}
+
+class Subclass : Outer() {//集成Outer类
+    // a 不可以访问
+    // b, c 可以访问 
+    // Nested 和 e 可以访问
+
+    override val b = 5 // 'b' 是protected可以被重写
+}
+
+class Unrelated(o: Outer) {//引用Outer类
+    // o.a, o.b 不可以访问
+    // o.c 和 o.d 可以访问 (相同模块) 
+    // Outer.Nested 不可以访问, 而且 Nested::e 也不可以访问
+}
+```
+
+#### 构造函数
+
+使用下面的句法（你需要显示使用关键词constructor）来具体说明类的主构造函数访问权限。
+
+```java
+class C private constructor(a: Int) { ... }
+```
+
+这里的构造函数是private。所有的构造函数默认都是public，只要类可以被访问，它的构造函数也就可以被访问。（即，一个internal 类的构造函数只能在相同的模块中访问）。
+
+#### 局部声明
+
+局部声明的变量、函数和类都不可以有访问修饰符。
+
 ### 模块
-## 表达式
+
+使用访问修饰符internal表示成员只能在相同的模块中访问。更明确地说，模块就是一系列的Kotlin文件编译在一起。
+
+- 一个IntelliJ IDEA模块
+- 一个Maven项目
+- 一个Gradle源码集合
+- Ant任务执行一次编译的一组文件
+
+## 扩展
+
+Kotlin, similar to C# and Gosu, provides the ability to extend a class with new functionality without having to inherit from the class or use any type of design pattern such as Decorator. This is done via special declarations called extensions . Kotlin supports extension functions and extension properties .
+
+与C#和Gosu类似，Kotlin提供既不使用继承也不使用任何类型的设计模式（如装饰者模式）扩展新功能类的能力。这种通过特殊声明的操作叫做扩展。Kotlin支持函数扩展和属性扩展。
+
+### 函数扩展
+### 静态解析扩展
+### 可空的接收者
+### 属性扩展
+### 伴随对象扩展
+### 扩展域
+### 声明扩展和成员
+### 动机
+
+```
+
 
 ##数据类
 ##密封类
