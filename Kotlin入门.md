@@ -1811,10 +1811,7 @@ class C private constructor(a: Int) { ... }
 
 与C#和Gosu类似，Kotlin提供既不使用继承也不使用任何类型的设计模式（如装饰者模式）扩展新功能类的能力。这种通过特殊声明的操作叫做扩展。Kotlin支持函数扩展和属性扩展。
 
-### 函数扩展
-
-To declare an extension function, we need to prefix its name with a receiver type, i.e. the type being extended. The following
-adds a swap function to MutableList<Int> :
+### 扩展函数
 
 为声明一个函数扩展，我们需要给函数的名称添加一个接收者类型做为前缀，即，被扩展的类型。下面给` MutableList<Int>`添加`swap`函数：
 
@@ -1825,9 +1822,6 @@ fun MutableList<Int>.swap(index1: Int, index2: Int) {
     this[index2] = tmp
 }
 ```
-
-The this keyword inside an extension function corresponds to the receiver object (the one that is passed before the dot). Now,
-we can call such a function on any MutableList<Int> :
 
 扩展函数中的关键词`this`对应着接收对象（在点经过前的那个），现在我们可以在任意 `MutableList<Int>`对象上使用这个函数。
 
@@ -1868,9 +1862,6 @@ printFoo(D())
 这个例子会输出"c"，因为被调用的扩展函数由参数c的类型C 
 类决定。
 
-If a class has a member function, and an extension function is defined which has the same receiver type, the same name and is
-applicable to given arguments, the member always wins. For example:
-
 如果类有成员函数，而且定义了一个具有相同接收类型、相同名称并且适用于给定参数的扩展函数，那么成员函数总是被调用。例如：
 
 ```java
@@ -1907,20 +1898,262 @@ fun Any?.toString(): String {
 }
 ```
 
+### 扩展属性
 
-### 属性扩展
-### 伴随对象扩展
-### 扩展域
-### 声明扩展和成员
-### 动机
+与函数扩展相似，Kotlin也支持属性扩展：
 
+```java
+val <T> List<T>.lastIndex: Int 
+    get() = size - 1
 ```
 
+> 注意：由于扩展并不会真正的给类添加成员，因此扩展属性是不可能有幕后字段的。这就是为什么不允许对扩展属性初始化。他们的行为只能通过显示提供setter、getter定义。
 
-##数据类
-##密封类
+```java
+val Foo.bar = 1 // 错误，不允许对扩展属性进行初始化
+```
+
+### 扩展伴随对象
+
+如果类定义了伴随对象，那么你可以给这个伴随对象定义扩展函数和扩展属性。
+
+```java
+class MyClass { 
+    companion object { } // 被Companion调用。
+}
+
+fun MyClass.Companion.foo() { //给伴随对象扩展函数。
+    // ...
+}
+```
+
+就和伴随对象的普通成员一样，他们可以只是用类名作为修饰符去调用。
+
+```java
+MyClass.foo()
+```
+
+### 扩展的域
+
+更多的时候，我们都是在顶层定义扩展。即，直接在包名的下面。
+
+```java
+package foo.bar 
+
+fun Baz.goo() { ... }
+```
+
+要在声明的包外面使用这样的扩展函数，我们需要导入它所有的节点。
+
+```java
+package com.example.usage 
+
+import foo.bar.goo // 通过名称"goo"导入素有扩展
+//或者
+import foo.bar.* // 导入"foo.bar"的所有内容
+
+fun usage(baz: Baz) { 
+    baz.goo() 
+}
+```
+
+更多信息见**导入**。
+
+### 声明扩展做成员
+
+在类内部，你可以给另一个类声明扩展。在扩展内部，有多个隐式接收对象，不需使用修饰符就能访问的对象成员。声明扩展的类的实例叫做派生接收器，扩展方法接收类型的实例叫做扩展接收器。
+
+```java
+class D { 
+    fun bar() { ... } 
+}
+
+class C { 
+    fun baz() { ... }
+
+    fun D.foo() { 
+        bar() // 调用 D.bar 
+        baz() // 调用 C.baz 
+    }
+
+    fun caller(d: D) { 
+        d.foo() // 调用扩展函数
+    }
+}
+```
+
+为避免派生接收器和扩展接收器成员发生名称冲突，扩展接收器享有优先权。要引用派生接收器的成员，你可以使用`this`句法做修饰。
+
+```java
+class C {
+
+fun D.foo() { 
+    toString() 
+    this@C.toString() 
+}
+```
+
+当做成员声明的扩展可以声明为`open`被子类重写。这意味着派生的函数对于派生接收器类型是虚拟的，对于扩展接收器类型是静态的。
+
+```java
+open class D { }
+
+class D1 : D() { }
+
+open class C {
+
+    open fun D.foo() { 
+        println("D.foo in C") 
+    }
+
+    open fun D1.foo() { 
+        println("D1.foo in C") 
+    }
+
+    fun caller(d: D) { 
+        d.foo() // 调用扩展函数 
+    }
+}
+
+class C1 : C() {
+
+    override fun D.foo() { 
+        println("D.foo in C1") 
+    }
+
+    override fun D1.foo() { 
+        println("D1.foo in C1") 
+    }
+}
+
+C().caller(D()) // 输出 "D.foo in C" 
+C1().caller(D()) // 输出 "D.foo in C1" - 派生接收器是虚拟解析的
+C().caller(D1()) // 输出 "D.foo in C" - 扩展接收器是静态解析的
+C1().caller(D1()) // 输出 "D.foo in C1" 
+```
+
+### 动机
+
+Java中，我们曾使用"*Utils"给类命名：FileUtils , StringUtils等等。著名的java.util.Collections就是这样命名的。但是这些工具类令人不愉快的地方在于它们的代码用起来像下面这样：
+
+```java
+// Java
+Collections.swap(list, Collections.binarySearch(list, Collections.max(otherList)), Collections.max(list));
+```
+
+它们的类名总是出现在代码中。不过，我们可以使用静态导入然后使用他们：
+
+```java
+// Java 
+swap(list, binarySearch(list, max(otherList)), max(list));
+```
+
+这样确实有一点改善，但是从IDE强大的代码完成中得不到一点帮助。如果我们可以这样写，那就更好了：
+
+```java
+// Java 
+list.swap(list.binarySearch(otherList.max()), list.max());
+```
+
+但是我们并不想给List类实现所有可能的方法，对吧？这就体现了扩展对我们有用的地方。
+
+## data类
+
+我们经常创建一些类，其主要目的是保存数据。在这样的类中，一些标准的功能和实用的函数经常从数据中机械的派生。在Kotlin中，这样的类叫做data 类，用`data`标记。
+
+```java
+data class User(val name: String, val age: Int)
+```
+
+编译器自动从主构造函数中声明的属性派生下面的成员：
+
+- equals()/hashCode() 一对
+- toString() 格式"User(name=John, age=42)"
+- componentN()函数 同属性声明的顺序一致
+- copy()函数，见下
+
+为确保生成的代码统一性和行为有效性，data 类必须履行下面的要求：
+
+- 主构造函数，至少要有个参数。
+- 所有主构造函数的参数必须用`var`或`val`标记
+- data 类不能是`abstract`、`open`、`sealed`或者`inner`
+- 1.1版本之前，data 类只能实现接口
+
+另外，生成成员遵循的这些规则需要考虑到继承的成员:
+
+- 如果在 data 类中显示的实现了equals()、hashCode()、toString() 或者在超类中实现且不允许被重写，那么这些函数就不会被生成，并且会使用已经存在的实现。
+- 如果超类型有开放的componentN()函数且返回合适的类型，那么 data 类与之相符的函数也会被生成并且重写超类型的函数。如果超类型的函数由于不匹配的签名或是final导致不能被重写，就会报告出错误。
+- 不允许给componentN()和copy()函数提供显示的实现。
+
+>1.1版本后，data 类可以继承其他类（参见密封类的例子）。
+
+在JVM中, 如果生成的类需要有无参的构造函数，那么需要具体说明所有属性的默认值（见构造函数）。
+
+```java
+data class User(val name: String = "", val age: Int = 0)
+```
+
+### 复制
+
+经常有一种场景，我们需要复制一个对象来修改它的部分属性并保留其余的不变。copy()函数就是为此生成的。对于上面的User类，会生成下面的copy()函数：
+
+```java
+fun copy(name: String = this.name, age: Int = this.age) = User(name, age)
+```
+允许我们这样写：
+```java
+val jack = User(name = "Jack", age = 1) 
+val olderJack = jack.copy(age = 2)
+```
+
+### data 类与解构声明
+
+data 类生成的Component函数能让它们用在解构声明中。
+
+```java
+val jane = User("Jane", 35) 
+val (name, age) = jane 
+println("$name, $age years of age") // 输出 "Jane, 35 years of age"
+```
+### 标准 data 类
+
+标准库提供了`Pair`和`Triple`。大多数情况下，命名数据类是更好的设计选择，因为它们给属性提供有意义的名称是代码更加易读。
+
+## sealed 类
+
+Sealed classes are used for representing restricted class hierarchies, when a value can have one of the types from a limited set, but cannot have any other type. They are, in a sense, an extension of enum classes: the set of values for an enum type is also restricted, but each enum constant exists only as a single instance, whereas a subclass of a sealed class can have multiple instances which can contain state.
+
+要声明一个sealed类，你需要在类名称前使用修饰符`sealed`。sealed类可以有子类，但是所有的子类必须在同一个文件中声明，作为sealed类本身。（Kotlin1.1版本之前，规则更加严格：子类必须嵌套在声明的sealed类内部）。
+
+```java
+sealed class Expr 
+data class Const(val number: Double) : Expr() 
+data class Sum(val e1: Expr, val e2: Expr) : Expr() 
+object NotANumber : Expr()
+```
+
+(The example above uses one additional new feature of Kotlin 1.1: the possibility for data classes to extend other classes, including sealed classes.)
+
+A sealed class is abstract by itself, it cannot be instantiated directly and can have abstract members.
+
+Sealed classes are not allowed to have non-private constructors (their constructors are private by default).
+
+Note that classes which extend subclasses of a sealed class (indirect inheritors) can be placed anywhere, not necessarily in the same ﬁle.
+
+The key beneﬁt of using sealed classes comes into play when you use them in a when expression. If it's possible to verify that the statement covers all cases, you don't need to add an else clause to the statement. However, this works only if you use when as an expression (using the result) and not as a statement.
+
+```java
+fun eval(expr: Expr): Double = when(expr) { 
+    is Const -> expr.number 
+    is Sum -> eval(expr.e1) + eval(expr.e2) 
+    NotANumber -> Double.NaN 
+    // 不需要else分句是因为我们已经覆盖了所有案例。
+}
+```
+
+```
 ##泛型
-##嵌套类
+##嵌套内部类
 ##枚举类
 ##对象表达式和声明
 ##代理
