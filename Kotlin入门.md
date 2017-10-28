@@ -2121,7 +2121,8 @@ println("$name, $age years of age") // 输出 "Jane, 35 years of age"
 
 ## sealed 类
 
-Sealed classes are used for representing restricted class hierarchies, when a value can have one of the types from a limited set, but cannot have any other type. They are, in a sense, an extension of enum classes: the set of values for an enum type is also restricted, but each enum constant exists only as a single instance, whereas a subclass of a sealed class can have multiple instances which can contain state.
+当一个值可以从一个有限集合中只能有一个类型时，Sealed 类用于表示有限类的层次结构。在某种场景下，它们是枚举类的扩展：一个枚举类型值的集合通常也受到限制，因为每个枚举常量只能是一个实例，而 sealed 类的子类可以有多个保存状态的实例。
+
 
 要声明一个sealed类，你需要在类名称前使用修饰符`sealed`。sealed类可以有子类，但是所有的子类必须在同一个文件中声明，作为sealed类本身。（Kotlin1.1版本之前，规则更加严格：子类必须嵌套在声明的sealed类内部）。
 
@@ -2132,15 +2133,15 @@ data class Sum(val e1: Expr, val e2: Expr) : Expr()
 object NotANumber : Expr()
 ```
 
-(The example above uses one additional new feature of Kotlin 1.1: the possibility for data classes to extend other classes, including sealed classes.)
+> 上面的例子使用了Kotlin1.1 版本新增的特性：data类具有扩展其他类的可能性，包括 sealed 类。
 
-A sealed class is abstract by itself, it cannot be instantiated directly and can have abstract members.
+Sealed 类本身是抽象的，它不能直接被实例化，但是可以有抽象成员函数。
 
-Sealed classes are not allowed to have non-private constructors (their constructors are private by default).
+Sealed 类不允许有非 private 构造函数，他们自身的构造函数默认是 private 的。
 
-Note that classes which extend subclasses of a sealed class (indirect inheritors) can be placed anywhere, not necessarily in the same ﬁle.
+要注意，继承 sealed 类的子类（间接继承）可以放置在任何地方，不一定非要放置在同一个文件中。
 
-The key beneﬁt of using sealed classes comes into play when you use them in a when expression. If it's possible to verify that the statement covers all cases, you don't need to add an else clause to the statement. However, this works only if you use when as an expression (using the result) and not as a statement.
+当在 when 表达式中使用 sealed 类时，它的关键又是才会起作用。如果能够验证声明涵盖了所有的分支，你就不需要给声明添加 else 分支。然而，只有把他们当做表达式使用时（使用结果）才会起作用，而不是当做一个声明。
 
 ```java
 fun eval(expr: Expr): Double = when(expr) { 
